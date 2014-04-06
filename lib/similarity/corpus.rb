@@ -1,4 +1,4 @@
-require 'gsl'
+require 'matrix'
 
 class Corpus
   attr_reader :terms, :documents

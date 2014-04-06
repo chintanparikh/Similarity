@@ -1,10 +1,17 @@
-require 'gsl'
+require 'matrix'
+
+class Matrix
+  def []=(i, j, x)
+    @rows[i][j] = x
+  end
+end
 
 class TermDocumentMatrix
   attr_reader :matrix, :labels, :number_of_terms, :number_of_documents, :non_zeros
 
   def initialize(corpus)
-    @matrix = GSL::Matrix.alloc(corpus.terms.size, corpus.document_count)
+    # @matrix = GSL::Matrix.alloc(corpus.terms.size, corpus.document_count)
+    @matrix = Matrix.build(corpus.terms.size, corpus.document_count) {0}
     @non_zeros = 0
     @number_of_terms = corpus.terms.size
     @number_of_documents = corpus.documents.size
@@ -20,7 +27,8 @@ class TermDocumentMatrix
       end
     end
 
-    @matrix.each_col { |col| col.div!(col.norm) }
+    # @matrix.each_col { |col| col.div!(col.norm) }
+    @matrix = Matrix.columns(@matrix.column_vectors.map{|c| c.normalize})
     @labels = corpus.terms.to_a.map {|e| e[0]}
   end
 
@@ -29,7 +37,7 @@ class TermDocumentMatrix
   end
 
   def col(idx)
-    @matrix.col(idx)
+    @matrix.column_vectors[idx]
   end
 
   def to_a
