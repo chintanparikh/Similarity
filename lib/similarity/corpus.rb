@@ -16,8 +16,12 @@ class Corpus
 
   def <<(document)
     document.terms.uniq.each { |term| @terms[term] += 1 }
-
     @documents << document
+  end
+
+  def remove(document)
+    document.terms.uniq.each { |term| @terms[term] -= 1 }
+    @documents.remove(document)
   end
 
   def remove_infrequent_terms!(percentage)
@@ -56,6 +60,7 @@ class Corpus
     return nil if index.nil?
 
     results = documents.each_with_index.map do |doc, doc_index|
+      next if document == doc
       similarity = similarity_matrix[index, doc_index]
       [doc, similarity]
     end
