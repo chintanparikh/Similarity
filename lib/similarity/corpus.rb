@@ -21,7 +21,7 @@ class Corpus
 
   def remove(document)
     document.terms.uniq.each { |term| @terms[term] -= 1 }
-    @documents.remove(document)
+    @documents.delete(document)
   end
 
   def remove_infrequent_terms!(percentage)
