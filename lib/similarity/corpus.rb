@@ -64,7 +64,7 @@ class Corpus
       similarity = similarity_matrix[index, doc_index]
       [doc, similarity]
     end
-    results.sort { |a,b| b.last <=> a.last }
+    results.sort { |a,b| b.last <=> a.last } unless results.count < 2
   end
 
   def weights(document)
