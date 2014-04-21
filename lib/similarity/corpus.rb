@@ -17,6 +17,8 @@ class Corpus
   def <<(document)
     document.terms.uniq.each { |term| @terms[term] += 1 }
     @documents << document
+    @term_document_matrix = nil
+    @similarity_matrix = nil
   end
 
   def remove(document)
@@ -62,9 +64,11 @@ class Corpus
     results = documents.each_with_index.map do |doc, doc_index|
       next if document == doc
       similarity = similarity_matrix[index, doc_index]
+      # puts "#{similarity} - #{doc.id}"
       [doc, similarity]
     end
-    results.sort { |a,b| b.last <=> a.last } unless results.count < 2
+    results = results.reject{|e| e == nil}
+    results.sort { |a,b| b.last <=> a.last } 
   end
 
   def weights(document)
